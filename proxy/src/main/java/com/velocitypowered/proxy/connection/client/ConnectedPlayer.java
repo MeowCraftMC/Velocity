@@ -196,7 +196,7 @@ public class ConnectedPlayer implements MinecraftConnectionAssociation, Player, 
     } else {
       this.tabList = new VelocityTabListLegacy(this, server);
     }
-    this.playerKey = playerKey;
+    this.playerKey = null;
     this.chatQueue = new ChatQueue(this);
     this.chatBuilderFactory = new ChatBuilderFactory(this.getProtocolVersion());
     this.resourcePackHandler = ResourcePackHandler.create(this, server);
@@ -1205,7 +1205,7 @@ public class ConnectedPlayer implements MinecraftConnectionAssociation, Player, 
 
   @Override
   public @Nullable IdentifiedKey getIdentifiedKey() {
-    return playerKey;
+    return null;
   }
 
   private class IdentityImpl implements Identity {

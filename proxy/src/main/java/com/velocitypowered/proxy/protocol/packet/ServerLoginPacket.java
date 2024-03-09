@@ -43,7 +43,7 @@ public class ServerLoginPacket implements MinecraftPacket {
 
   public ServerLoginPacket(String username, @Nullable IdentifiedKey playerKey) {
     this.username = Preconditions.checkNotNull(username, "username");
-    this.playerKey = playerKey;
+    this.playerKey = null;
   }
 
   public ServerLoginPacket(String username, @Nullable UUID holderUuid) {
@@ -60,11 +60,11 @@ public class ServerLoginPacket implements MinecraftPacket {
   }
 
   public @Nullable IdentifiedKey getPlayerKey() {
-    return this.playerKey;
+    return null;
   }
 
   public void setPlayerKey(IdentifiedKey playerKey) {
-    this.playerKey = playerKey;
+    this.playerKey = null;
   }
 
   public @Nullable UUID getHolderUuid() {
@@ -92,7 +92,8 @@ public class ServerLoginPacket implements MinecraftPacket {
         playerKey = null;
       } else {
         if (buf.readBoolean()) {
-          playerKey = ProtocolUtils.readPlayerKey(version, buf);
+          playerKey = null;
+          ProtocolUtils.readPlayerKey(version, buf);
         } else {
           playerKey = null;
         }
@@ -123,8 +124,8 @@ public class ServerLoginPacket implements MinecraftPacket {
     if (version.noLessThan(ProtocolVersion.MINECRAFT_1_19)) {
       if (version.lessThan(ProtocolVersion.MINECRAFT_1_19_3)) {
         if (playerKey != null) {
-          buf.writeBoolean(true);
-          ProtocolUtils.writePlayerKey(buf, playerKey);
+          buf.writeBoolean(false);
+//          ProtocolUtils.writePlayerKey(buf, playerKey);
         } else {
           buf.writeBoolean(false);
         }
@@ -137,11 +138,11 @@ public class ServerLoginPacket implements MinecraftPacket {
 
       if (version.noLessThan(ProtocolVersion.MINECRAFT_1_19_1)) {
         if (playerKey != null && playerKey.getSignatureHolder() != null) {
-          buf.writeBoolean(true);
-          ProtocolUtils.writeUuid(buf, playerKey.getSignatureHolder());
+          buf.writeBoolean(false);
+//          ProtocolUtils.writeUuid(buf, playerKey.getSignatureHolder());
         } else if (this.holderUuid != null) {
-          buf.writeBoolean(true);
-          ProtocolUtils.writeUuid(buf, this.holderUuid);
+          buf.writeBoolean(false);
+//          ProtocolUtils.writeUuid(buf, this.holderUuid);
         } else {
           buf.writeBoolean(false);
         }

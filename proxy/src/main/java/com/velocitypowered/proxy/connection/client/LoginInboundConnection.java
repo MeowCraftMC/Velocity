@@ -165,7 +165,7 @@ public class LoginInboundConnection implements LoginPhaseConnection, KeyIdentifi
 
   @Override
   public IdentifiedKey getIdentifiedKey() {
-    return playerKey;
+    return null;
   }
 
   @Override
