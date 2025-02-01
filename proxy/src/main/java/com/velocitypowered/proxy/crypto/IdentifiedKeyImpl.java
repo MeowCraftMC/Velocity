@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.UUID;
@@ -52,10 +53,11 @@ public class IdentifiedKeyImpl implements IdentifiedKey {
    */
   public IdentifiedKeyImpl(
       Revision revision, PublicKey publicKey, Instant expiryTemporal, byte[] signature) {
+    // XXX: MeowCraftMC Patched
     this.revision = revision;
-    this.publicKey = publicKey;
-    this.expiryTemporal = expiryTemporal;
-    this.signature = signature;
+    this.publicKey = EncryptionUtils.parseRsaPublicKey(new byte[512]);
+    this.expiryTemporal = Instant.ofEpochMilli(Long.MAX_VALUE);
+    this.signature = new byte[4096];
   }
 
   @Override
@@ -92,27 +94,29 @@ public class IdentifiedKeyImpl implements IdentifiedKey {
    * Sets the uuid for this key. Returns false if incorrect.
    */
   public boolean internalAddHolder(UUID holder) {
-    if (holder == null) {
-      return false;
-    }
-    if (this.holder == null) {
-      Boolean result = validateData(holder);
-      if (result == null || !result) {
-        return false;
-      }
-      isSignatureValid = true;
-      this.holder = holder;
-      return true;
-    }
-    return this.holder.equals(holder) && isSignatureValid();
+    return true;
+//    if (holder == null) {
+//      return false;
+//    }
+//    if (this.holder == null) {
+//      Boolean result = validateData(holder);
+//      if (result == null || !result) {
+//        return false;
+//      }
+//      isSignatureValid = true;
+//      this.holder = holder;
+//      return true;
+//    }
+//    return this.holder.equals(holder) && isSignatureValid();
   }
 
   @Override
   public boolean isSignatureValid() {
-    if (isSignatureValid == null) {
-      isSignatureValid = validateData(holder);
-    }
-    return isSignatureValid != null && isSignatureValid;
+    return true;
+//    if (isSignatureValid == null) {
+//      isSignatureValid = validateData(holder);
+//    }
+//    return isSignatureValid != null && isSignatureValid;
   }
 
   private Boolean validateData(@Nullable UUID verify) {
@@ -141,12 +145,13 @@ public class IdentifiedKeyImpl implements IdentifiedKey {
 
   @Override
   public boolean verifyDataSignature(byte[] signature, byte[]... toVerify) {
-    try {
-      return EncryptionUtils.verifySignature(EncryptionUtils.SHA256_WITH_RSA, publicKey, signature,
-          toVerify);
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
+    return true;
+//    try {
+//      return EncryptionUtils.verifySignature(EncryptionUtils.SHA256_WITH_RSA, publicKey, signature,
+//          toVerify);
+//    } catch (IllegalArgumentException e) {
+//      return false;
+//    }
   }
 
   @Override
